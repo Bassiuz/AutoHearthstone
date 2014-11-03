@@ -27,12 +27,7 @@ public class AttackHero extends Action{
     {
         defendingPlayer.takeDamage(attackingMinion.getPower());
         attackingMinion.setAttacked(true);
-        System.out.println(attackingMinion.toString() + "attacking" + defendingPlayer.toString());
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(AttackHero.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        //System.out.println(attackingMinion.toString() + "attacking" + defendingPlayer.toString());
     }
     
     public Minion getAttackingMinion() {

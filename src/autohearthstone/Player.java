@@ -171,13 +171,14 @@ public class Player implements Serializable {
             ///////actions.get(0).Perform();
             /// optie 2, ga board values uitrekenen.
 
+            int currentScore = CalculateBoard();
             Action bestAction = new DoNothing(this);
-            int highestScore = CalculateBoard();
+            int highestScore = currentScore;
 
             for (Action action : actions)
             {
                 Player clonedPlayer = SerializationUtils.clone(this);
-                clonedPlayer.performActions();
+                clonedPlayer.performSpecificAction(action);
                 clonedPlayer.checkBoardState();
                 clonedPlayer.opponent.checkBoardState();
                 if (clonedPlayer.opponent.lost == true)
@@ -194,6 +195,7 @@ public class Player implements Serializable {
                 }
             }
 
+            System.out.println(this.getName() + " performs action " + bestAction.toString() + "to go from " +  Integer.toString(currentScore) + " to " + Integer.toString(highestScore));
             bestAction.Perform();
 
 

@@ -45,7 +45,7 @@ public class DataReader {
 
         Workbook workbook = Workbook.getWorkbook(new File("E://Documents//HearthstoneExcel//HearthstoneBoardEvaluation.xls"));
         Sheet sheet = workbook.getSheet(2);
-        Cell cell2 = sheet.getCell(3, Life + 3);
+        Cell cell2 = sheet.getCell(3, 4);
         try{
             int num = Integer.parseInt( cell2.getContents());
             // is an integer!

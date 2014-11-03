@@ -26,12 +26,7 @@ public class PlayVanilla extends Action{
         playedMinion.ap.setEmptyManaCrystal(playedMinion.ap.getEmptyManaCrystal() + playedMinion.cost);
         playedMinion.ap.Hand.remove(playedMinion);
         playedMinion.ap.Board.add(playedMinion);
-        System.out.println(playedMinion.ap.toString() + "played" + playedMinion.toString());
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(PlayVanilla.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        //System.out.println(playedMinion.ap.toString() + "played" + playedMinion.toString());
     }
 
     public Minion getPlayedMinion() {
