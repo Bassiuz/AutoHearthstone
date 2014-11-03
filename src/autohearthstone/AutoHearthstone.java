@@ -5,11 +5,13 @@
  */
 package autohearthstone;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Bash
  */
-public class AutoHearthstone {
+public class AutoHearthstone implements Serializable {
 
     /**
      * @param args the command line arguments

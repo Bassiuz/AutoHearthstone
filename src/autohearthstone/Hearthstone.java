@@ -7,11 +7,13 @@ package autohearthstone;
 
 import Cards.*;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Bash
  */
-public class Hearthstone {
+public class Hearthstone implements Serializable {
     Player player1;
     Player player2;
     
@@ -54,16 +56,16 @@ public class Hearthstone {
         deck.addCard(new RiverCrocolisk());
         
         
-        deck2.addCard(new Wisp());
-        deck2.addCard(new Wisp());
-        deck2.addCard(new Wisp());
-        deck2.addCard(new Wisp());
-        deck2.addCard(new Wisp());
-        deck2.addCard(new Wisp());
-        deck2.addCard(new Wisp());
-        deck2.addCard(new Wisp());
-        deck2.addCard(new Wisp());
-        deck2.addCard(new Wisp());
+        deck2.addCard(new ChillwindYeti());
+        deck2.addCard(new ChillwindYeti());
+        deck2.addCard(new ChillwindYeti());
+        deck2.addCard(new ChillwindYeti());
+        deck2.addCard(new ChillwindYeti());
+        deck2.addCard(new ChillwindYeti());
+        deck2.addCard(new ChillwindYeti());
+        deck2.addCard(new ChillwindYeti());
+        deck2.addCard(new ChillwindYeti());
+        deck2.addCard(new ChillwindYeti());
         deck2.addCard(new Wisp());
         deck2.addCard(new Wisp());
         deck2.addCard(new Wisp());
@@ -95,7 +97,10 @@ public class Hearthstone {
         
         player1.setUp();
         player2.setUp();
-        
+
+        player1.setName("Player 1");
+        player2.setName("Player 2");
+
         player1.startTurn();
         
     }

@@ -5,6 +5,7 @@
  */
 package autohearthstone;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -12,7 +13,7 @@ import java.util.Collection;
  *
  * @author Bash
  */
-public class Deck {
+public class Deck implements Serializable {
     public ArrayList<Card> ActiveDeck = new ArrayList<Card>();
     public Hero hero;
     

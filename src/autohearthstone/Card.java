@@ -5,13 +5,14 @@
  */
 package autohearthstone;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author Bash
  */
-public class Card {
+public class Card implements Serializable {
     
     String state;
     public Hearthstone hs;

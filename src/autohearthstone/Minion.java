@@ -5,11 +5,15 @@
  */
 package autohearthstone;
 
+import ExcelReader.DataReader;
+
+import java.io.Serializable;
+
 /**
  *
  * @author Bash
  */
-public class Minion extends Card{
+public class Minion extends Card implements Serializable {
     public int power;
     public int toughness;
     public int damage;
@@ -21,6 +25,8 @@ public class Minion extends Card{
     public  boolean attacked;
     public int cost;
     public boolean summoningSick;
+    public int ExtraHandValue;
+    public int ExtraBoardValue;
 
     public Minion() {
     }
@@ -28,7 +34,22 @@ public class Minion extends Card{
     public void Destroy() {
         ap.Board.remove(this);
     }
-    
+
+    public int getBoardValue()
+    {
+       try {
+           return DataReader.getVanillaValue(power, toughness);
+        }
+       catch (Exception e)
+        {
+            return -1;
+        }
+    }
+
+    public int getHandValue()
+    {
+        return ExtraHandValue;
+    }
 
     public int getPower() {
         return power;

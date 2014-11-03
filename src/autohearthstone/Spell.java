@@ -5,10 +5,12 @@
  */
 package autohearthstone;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Bash
  */
-public class Spell extends Card {
+public class Spell extends Card implements Serializable {
     
 }

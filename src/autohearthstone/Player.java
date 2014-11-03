@@ -5,23 +5,38 @@
  */
 package autohearthstone;
 
+import Actions.*;
+import ExcelReader.DataReader;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.lang3.SerializationUtils;
 
 /**
  *
  * @author Bash
  */
-public class Player {
+public class Player implements Serializable {
     public int totalManaCrystal;
     public int emptyManaCrystal;
     public Hearthstone hs;
-    
+
+
+    public String Name;
+
     public Player opponent;
     
     public int lifeTotal;
     public int armor;
     public int attackPower;
+    public int fatigue = 0;
     
     public Deck deck;
     
@@ -50,28 +65,57 @@ public class Player {
             actions.addAll(card.generateActionsOnBoard());
         }
     }
-    
-    public void drawACard()
+
+    public int CalculateBoard()
     {
+        int totalValue = 0;
+        for(Minion minion : getBoard())
+        {
+            totalValue = totalValue + minion.getBoardValue();
+        }
+
+        try {
+            totalValue = totalValue + DataReader.getLifeValue(lifeTotal);
+        }
+        catch (Exception e)
+        {
+            return -1;
+        }
+
+        return totalValue;
+
+    }
+
+    public void drawACard()
+    {if ( ActiveDeck.size() > 0) {
         Random randomGenerator = new Random();
         int index = randomGenerator.nextInt(ActiveDeck.size());
         Card drawnCard = ActiveDeck.get(index);
         Hand.add(drawnCard);
         ActiveDeck.remove(drawnCard);
     }
+    else
+    {
+        fatigue++;
+        takeDamage(fatigue);
+    }
+    }
     
     public void setUp()
     {
+
         ActiveDeck.addAll(deck.getDeck(hs, this));
         drawACard();
         drawACard();
         drawACard();
         lifeTotal = 30;
+
     }
     
     public void startTurn()
     {
-        drawACard();
+            drawACard();
+
         if (totalManaCrystal < 10)
         {
             totalManaCrystal = totalManaCrystal + 1;
@@ -109,7 +153,12 @@ public class Player {
         System.out.println("Passes by" + this.toString());
         opponent.startTurn();
     }
-    
+
+    public void performSpecificAction(Action action)
+    {
+        action.Perform();
+    }
+
     public void performActions()
     {
         if (!lost && !opponent.lost)
@@ -117,7 +166,38 @@ public class Player {
         generateAllActions();
         if (actions.size() > 0)
         {
-            actions.get(0).Perform();
+            // hier wordt gekozen welke acite re gedaan word
+            /// optie 1, doe gewoon de eerste
+            ///////actions.get(0).Perform();
+            /// optie 2, ga board values uitrekenen.
+
+            Action bestAction = new DoNothing(this);
+            int highestScore = CalculateBoard();
+
+            for (Action action : actions)
+            {
+                Player clonedPlayer = SerializationUtils.clone(this);
+                clonedPlayer.performActions();
+                clonedPlayer.checkBoardState();
+                clonedPlayer.opponent.checkBoardState();
+                if (clonedPlayer.opponent.lost == true)
+                {
+                    bestAction = action;
+                    highestScore = 99999999;
+                }
+
+                int score = clonedPlayer.CalculateBoard() - clonedPlayer.opponent.CalculateBoard();
+                if (score > highestScore)
+                {
+                    highestScore = score;
+                    bestAction = action;
+                }
+            }
+
+            bestAction.Perform();
+
+
+
             checkBoardState();
             opponent.checkBoardState();
             actions.clear();
@@ -248,9 +328,17 @@ public class Player {
 
     private void lose() {
         lost = true;
-        System.out.println(this.toString() + "Lost");
+        System.out.println(Name + " Lost");
     }
 
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
 
     
     

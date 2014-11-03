@@ -5,11 +5,13 @@
  */
 package autohearthstone;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Bash
  */
-public class Action {
+public class Action implements Serializable {
     
     
     public void Perform()

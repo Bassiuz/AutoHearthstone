@@ -5,10 +5,12 @@
  */
 package autohearthstone;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Bash
  */
-public class Hero {
+public class Hero implements Serializable {
     
 }

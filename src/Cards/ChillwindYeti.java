@@ -27,6 +27,8 @@ public class ChillwindYeti extends Minion {
         super.frozen = false;
         super.attacked = false;
         super.summoningSick = true;
+        super.ExtraBoardValue = 0;
+        super.ExtraHandValue = 0;
     }
 
     public ArrayList<Action> generateActionsOnBoard()
