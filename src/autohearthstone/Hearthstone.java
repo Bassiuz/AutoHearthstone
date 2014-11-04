@@ -19,15 +19,18 @@ import jxl.write.WriteException;
  * @author Bash
  */
 public class Hearthstone implements Serializable {
-    Player player1;
-    Player player2;
-    DataReader dr;
+
+    int Player1Wins = 0;
+    int Player2Wins = 0;
+    int totalGames = 50;
     
     public Hearthstone() throws BiffException, IOException, WriteException
     {
-        dr = new DataReader();
-        player1 = new Player(this, dr);
-        player2 = new Player(this, dr);
+        DataReader dr = new DataReader();
+
+        for(int l=1; l<totalGames; l++) {
+        Player player1 = new Player(this, dr);
+        Player player2 = new Player(this, dr);
         
         Deck deck = new Deck();
         Deck deck2 = new Deck();
@@ -108,7 +111,20 @@ public class Hearthstone implements Serializable {
         player1.setName("Player 1");
         player2.setName("Player 2");
 
-        player1.startTurn();
-        
+
+            player1.startTurn();
+            if (player1.lost)
+            {
+                Player2Wins++;
+            }
+            else
+            {
+                Player1Wins++;
+            }
+        }
+
+
+        float percent = (Player1Wins * 100.0f) / totalGames;
+        System.out.println("Player 1 wins "  + Float.toString(percent) + " percent of the time, calculated by generating " + totalGames + " games");
     }
 }

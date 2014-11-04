@@ -24,6 +24,9 @@ import org.apache.commons.lang3.SerializationUtils;
  * @author Bash
  */
 public class Player implements Serializable {
+    public Boolean GameOutputOn = false;
+
+
     public int totalManaCrystal;
     public int emptyManaCrystal;
     public Hearthstone hs;
@@ -129,9 +132,11 @@ public class Player implements Serializable {
             minion.setAttacked(false);
         }
 
-        System.out.println(getName() + " starts his turn");
-        System.out.println("Life: " + Integer.toString(lifeTotal));
-        System.out.println("Mana: " + Integer.toString(totalManaCrystal));
+        if (GameOutputOn) {
+            System.out.println(getName() + " starts his turn");
+            System.out.println("Life: " + Integer.toString(lifeTotal));
+            System.out.println("Mana: " + Integer.toString(totalManaCrystal));
+        }
         performActions();
 
     }
@@ -184,7 +189,9 @@ public class Player implements Serializable {
             int opponentBoardValue = opponent.CalculateBoard();
 
             int currentScore = boardValue - opponentBoardValue;
-            System.out.println("Current board score for " + getName() + " " + Integer.toString(currentScore));
+            if (GameOutputOn) {
+                System.out.println("Current board score for " + getName() + " " + Integer.toString(currentScore));
+            }
             Action bestAction = new DoNothing(this);
             int highestScore = currentScore;
             int index = 0;
@@ -196,6 +203,11 @@ public class Player implements Serializable {
                 clonedPlayer.checkBoardState();
                 clonedPlayer.opponent.checkBoardState();
                 if (clonedPlayer.opponent.lost == true)
+                {
+                    bestAction = action;
+                    highestScore = 99999999;
+                }
+                if (clonedPlayer.checkForLethal())
                 {
                     bestAction = action;
                     highestScore = 99999999;
@@ -213,7 +225,9 @@ public class Player implements Serializable {
                 index ++;
             }
 
-            System.out.println(this.getName() + " performs action " + bestAction.toString() + "to go from " +  Integer.toString(currentScore) + " to " + Integer.toString(highestScore));
+            if (GameOutputOn) {
+                System.out.println(this.getName() + " performs action " + bestAction.toString() + "to go from " + Integer.toString(currentScore) + " to " + Integer.toString(highestScore));
+            }
             bestAction.Perform();
 
 
@@ -229,6 +243,37 @@ public class Player implements Serializable {
         }
         }
         
+    }
+
+    public Boolean checkForLethal()
+    {
+        Boolean canAttackFace = true;
+        for (Minion minion : opponent.getBoard())
+        {
+            if (minion.isTaunt())
+            {
+                canAttackFace = false;
+            }
+        }
+
+        int totalDamage = 0;
+
+        for (Minion minion : getBoard())
+        {
+            if (!minion.isAttacked() && !minion.isSummoningSick())
+            {
+                totalDamage = totalDamage + minion.power;
+            }
+        }
+
+        if (totalDamage >= opponent.lifeTotal)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     
     public void takeDamage(int damage)
