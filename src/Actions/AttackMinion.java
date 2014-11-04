@@ -47,6 +47,9 @@ public class AttackMinion extends Action{
         this.defendingMinion = defendingMinion;
     }
     
-    
+    public String toString()
+    {
+        return "Attack " + defendingMinion.toString() + " with " + attackingMinion.toString();
+    }
     
 }

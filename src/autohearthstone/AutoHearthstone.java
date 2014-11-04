@@ -5,6 +5,10 @@
  */
 package autohearthstone;
 
+import jxl.read.biff.BiffException;
+import jxl.write.WriteException;
+
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -16,7 +20,7 @@ public class AutoHearthstone implements Serializable {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws BiffException, IOException, WriteException {
         // TODO code application logic here
         Hearthstone hs = new Hearthstone();
     }

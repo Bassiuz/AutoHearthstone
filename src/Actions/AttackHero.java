@@ -45,6 +45,10 @@ public class AttackHero extends Action{
     public void setDefendingHero(Player defendingPlayer) {
         this.defendingPlayer = defendingPlayer;
     }
-    
+
+    public String toString()
+    {
+        return "Attack " + defendingPlayer.getName() + " with " + attackingMinion.toString() + " from " + Integer.toString(defendingPlayer.lifeTotal) + " to " + Integer.toString(defendingPlayer.lifeTotal - attackingMinion.power);
+    }
     
 }

@@ -35,15 +35,9 @@ public class Minion extends Card implements Serializable {
         ap.Board.remove(this);
     }
 
-    public int getBoardValue()
+    public int getBoardValue(DataReader dr)
     {
-       try {
-           return DataReader.getVanillaValue(power, toughness);
-        }
-       catch (Exception e)
-        {
-            return -1;
-        }
+           return dr.getVanillaValue(power, (toughness - damage));
     }
 
     public int getHandValue()

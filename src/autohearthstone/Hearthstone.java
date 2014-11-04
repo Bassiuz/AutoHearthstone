@@ -7,7 +7,12 @@ package autohearthstone;
 
 import Cards.*;
 
+import java.io.IOException;
 import java.io.Serializable;
+
+import ExcelReader.DataReader;
+import jxl.read.biff.BiffException;
+import jxl.write.WriteException;
 
 /**
  *
@@ -16,11 +21,13 @@ import java.io.Serializable;
 public class Hearthstone implements Serializable {
     Player player1;
     Player player2;
+    DataReader dr;
     
-    public Hearthstone()
+    public Hearthstone() throws BiffException, IOException, WriteException
     {
-        player1 = new Player(this);
-        player2 = new Player(this);
+        dr = new DataReader();
+        player1 = new Player(this, dr);
+        player2 = new Player(this, dr);
         
         Deck deck = new Deck();
         Deck deck2 = new Deck();

@@ -27,7 +27,7 @@ public class Player implements Serializable {
     public int totalManaCrystal;
     public int emptyManaCrystal;
     public Hearthstone hs;
-
+    public DataReader dr;
 
     public String Name;
 
@@ -49,8 +49,9 @@ public class Player implements Serializable {
     
     public Boolean lost = false;
 
-    public Player(Hearthstone hs) {
+    public Player(Hearthstone hs, DataReader dr) {
         this.hs = hs;
+        this.dr = dr;
     }
     
     public void generateAllActions()
@@ -71,11 +72,11 @@ public class Player implements Serializable {
         int totalValue = 0;
         for(Minion minion : getBoard())
         {
-            totalValue = totalValue + minion.getBoardValue();
+            totalValue = totalValue + minion.getBoardValue(dr);
         }
 
         try {
-            totalValue = totalValue + DataReader.getLifeValue(lifeTotal);
+            totalValue = totalValue + dr.getLifeValue(lifeTotal);
         }
         catch (Exception e)
         {
@@ -127,9 +128,12 @@ public class Player implements Serializable {
             minion.setSummoningSick(false);
             minion.setAttacked(false);
         }
-        
-        
+
+        System.out.println(getName() + " starts his turn");
+        System.out.println("Life: " + Integer.toString(lifeTotal));
+        System.out.println("Mana: " + Integer.toString(totalManaCrystal));
         performActions();
+
     }
     
     public void checkBoardState() {
@@ -150,13 +154,19 @@ public class Player implements Serializable {
     
     public void pass()
     {
-        System.out.println("Passes by" + this.toString());
+        ///System.out.println("Passes by" + this.toString());
         opponent.startTurn();
     }
 
     public void performSpecificAction(Action action)
     {
         action.Perform();
+    }
+
+    public void performSpecificActionOnIndex (int index)
+    {
+        generateAllActions();
+        actions.get(index).Perform();
     }
 
     public void performActions()
@@ -170,15 +180,19 @@ public class Player implements Serializable {
             /// optie 1, doe gewoon de eerste
             ///////actions.get(0).Perform();
             /// optie 2, ga board values uitrekenen.
+            int boardValue = CalculateBoard();
+            int opponentBoardValue = opponent.CalculateBoard();
 
-            int currentScore = CalculateBoard();
+            int currentScore = boardValue - opponentBoardValue;
+            System.out.println("Current board score for " + getName() + " " + Integer.toString(currentScore));
             Action bestAction = new DoNothing(this);
             int highestScore = currentScore;
+            int index = 0;
 
             for (Action action : actions)
             {
                 Player clonedPlayer = SerializationUtils.clone(this);
-                clonedPlayer.performSpecificAction(action);
+                clonedPlayer.performSpecificActionOnIndex(index);
                 clonedPlayer.checkBoardState();
                 clonedPlayer.opponent.checkBoardState();
                 if (clonedPlayer.opponent.lost == true)
@@ -187,12 +201,16 @@ public class Player implements Serializable {
                     highestScore = 99999999;
                 }
 
-                int score = clonedPlayer.CalculateBoard() - clonedPlayer.opponent.CalculateBoard();
+                int boardValueCloned = clonedPlayer.CalculateBoard();
+                int opponentBoardValueCloned = clonedPlayer.opponent.CalculateBoard();
+                int score = boardValueCloned - opponentBoardValueCloned;
                 if (score > highestScore)
                 {
                     highestScore = score;
                     bestAction = action;
                 }
+
+                index ++;
             }
 
             System.out.println(this.getName() + " performs action " + bestAction.toString() + "to go from " +  Integer.toString(currentScore) + " to " + Integer.toString(highestScore));
@@ -330,7 +348,7 @@ public class Player implements Serializable {
 
     private void lose() {
         lost = true;
-        System.out.println(Name + " Lost");
+        //System.out.println(Name + " Lost");
     }
 
 
