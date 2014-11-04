@@ -349,6 +349,7 @@ public class Player implements Serializable {
     private void lose() {
         lost = true;
         //System.out.println(Name + " Lost");
+
     }
 
 
